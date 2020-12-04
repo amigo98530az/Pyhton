@@ -1,200 +1,150 @@
-# Purchase-Analytics
+
 
 ## Table of Contents
 1. [Problem](README.md#problem)
 1. [Steps to submit your solution](README.md#steps-to-submit-your-solution)
 1. [Input Dataset](README.md#input-dataset)
+1. [Expected output](README.md#expected-output)
 1. [Instructions](README.md#instructions)
-1. [Output](README.md#output)
 1. [Tips on getting an interview](README.md#tips-on-getting-an-interview)
+1. [Repo directory structure](README.md#repo-directory-structure)
+1. [Testing your code](README.md#testing-your-code)
 1. [Questions?](README.md#questions?)
 
 ## Problem
+  
+The federal Census produces a plethora of datasets on a variety of topics tabulated in a number of different ways. In particular, the Census is known for population counts, including down to census tracts, or relatively small areas that average 4,000 inhabitants. Data at that detailed level is useful, but sometimes it's also helpful to roll up some of the information.
 
-Instacart has published a [dataset](https://www.instacart.com/datasets/grocery-shopping-2017) containing 3 million Instacart orders.
-
-**For this challenge, we want you to calculate, for each department, the number of times a product was requested, number of times a product was requested for the first time and a ratio of those two numbers.**
+**For this challenge, we want you to take the [2000 to 2010 Census Tract Population Change](https://www.census.gov/data/tables/time-series/dec/metro-micro/tract-change-00-10.html) dataset, perform a few calculations and then write out a new file with the summarized data.
 
 
 ## Steps to submit your solution
-* To submit your entry please use the link you received in your coding challenge invite email
-* You will only be able to submit through the link one time
-* Do NOT attach a file - we will not admit solutions which are attached files
+
+* To submit your entry, use the link you received in your coding challenge invite email
+* Do NOT attach a file - we will not accept solutions with attached files
 * Do NOT send your solution over an email - We are unable to accept coding challenges that way
+* To see whether your code will pass at least one key test on our system (do this prior to submission), use this page: https://insight-cc-submission.com/test-my-repo-link and choose 'Population Roll-up' in the challenge dropdown
 
 ### Creating private repositories
-To avoid plagiarism and any wrongdoing, we request you to submit a private repository of your code. Both GitHub and Bitbucket offer free unlimited private repositories at no extra cost.
-* Create a private repository on GitHub or Bitbucket with the given repository structure. Here is how you will be sharing your private repositories for us to see once you are ready to submit.
-* Add "insight-cc-bot" as a collaborator in your project.
+To avoid plagiarism and wrongdoing, we request you submit a private repository of your code, and then invite us to collaborate prior to submitting your solution. Both GitHub and Bitbucket offer free private repositories at no extra cost.
+* Create a private repository on GitHub or Bitbucket with the directory structure detailed [below](README.md#repo-directory-structure)
+* Add "insight-cc-bot" (or cc@insightdataengineering.com on Bitbucket) as a collaborator in your project
   * [How to add collaborators on GitHub?](https://help.github.com/articles/inviting-collaborators-to-a-personal-repository/)
   * [How to add users and groups as collaborators in Bitbucket?](https://confluence.atlassian.com/bitbucket/grant-repository-access-to-users-and-groups-221449716.html)
 * **We will NOT be grading submissions we do not have access to.**
 
 ### Submitting a link to your repository
-* Use the submission box to enter the link to your GitHub or Bitbucket repo ONLY
-* Link to the specific repo for this project, not your general profile
-* Put any comments in the README inside your project repo, not in the submission box
+* Provide a link to the specific repo for this project, not your general profile
+* Exactly follow the directory structure [detailed](README.md#repo-directory-structure) in this Readme, especially providing a 'run.sh' shell script that executes your code
+* Put any comments in the README file of your project repo
 
+## Input dataset
+For this challenge, when we grade your submission, an input file, `censustract-00-10.csv`, will be moved to the top-most `input` directory of your repository. Your code must read that input file, process it and write the results to an output file, `report.csv` that your code must place in the top-most `output` directory of your repository.
 
-## Input Datasets
-
-For this challenge, we have two separate input data sources, `order_products.csv` and `products.csv`.
-
-You can assume each line of the file `order_products.csv` holds data on one request. The file contains data of the form
-
+Below is a sample `censustract-00-10.csv` file: 
 ```
-order_id,product_id,add_to_cart_order,reordered
-2,33120,1,1
-2,28985,2,1
-2,9327,3,0
-2,45918,4,1
-3,17668,1,1
-3,46667,2,1
-3,17461,4,1
-3,32665,3,1
-4,46842,1,0
+GEOID,ST10,COU10,TRACT10,AREAL10,AREAW10,CSA09,CBSA09,CBSA_T,MDIV09,CSI,COFLG,POP00,HU00,POP10,HU10,NPCHG,PPCHG,NHCHG,PHCHG
+02130000100,02,130,000100,4835.518216,1793.906364,,28540,"Ketchikan, AK",,2,C,3801,1736,3484,1694,-317,-8.34,-42,-2.42
+02130000200,02,130,000200,5.204047664,0.4525275793,,28540,"Ketchikan, AK",,2,C,4909,2156,4884,2179,-25,-0.51,23,1.07
+02130000300,02,130,000300,2.771683112,0.4653222332,,28540,"Ketchikan, AK",,2,C,3054,1493,2841,1394,-213,-6.97,-99,-6.63
+02130000400,02,130,000400,14.91968071,0.3246679135,,28540,"Ketchikan, AK",,2,C,2310,891,2268,899,-42,-1.82,8,0.90
+48487950300,48,487,950300,933.9565129,6.998080686,,46900,"Vernon, TX",,2,C,2304,916,1849,892,-455,-19.75,-24,-2.62
+48487950500,48,487,950500,13.21399173,0.01418539391,,46900,"Vernon, TX",,2,C,3172,1338,2955,1388,-217,-6.84,50,3.74
+48487950600,48,487,950600,10.65575478,0,,46900,"Vernon, TX",,2,C,6022,2715,5994,2781,-28,-0.46,66,2.43
+48487950700,48,487,950700,13.01780124,0.0371546123,,46900,"Vernon, TX",,2,C,3181,1409,2737,1257,-444,-13.96,-152,-10.79
 ```
 
-where
+Each line of the input file, except for the first-line header, represents population data for a census tract. Consult this [file layout document produced by the Census](https://www2.census.gov/programs-surveys/metro-micro/technical-documentation/file-layout/tract-change-00-10/censustract-00-10-layout.doc) for a description of each field.
 
-* `order_id`: unique identifier of order
-* `product_id`: unique identifier of product
-* `add_to_cart_order`: sequence order in which each product was added to shopping cart
-* `reordered`: flag indicating if the product has been ordered by this user at some point in the past. The field is `1` if the user has ordered it in the past and `0` if the user has not. While data engineers should validate their data, for the purposes of this challenge, you can take the `reordered` flag at face value and assume it accurately reflects whether the product has been ordered by the user before.
+The sample input file is taken from the data file at [2000 to 2010 Census Tract Population Change](https://www.census.gov/data/tables/time-series/dec/metro-micro/tract-change-00-10.html), which contains population counts for census tracts and how much they've changed over the decade. While census tracts are fairly small geographical areas inhabited by 1,200 to 8,000 people, they also can be grouped into larger Metropolitan and Micropolitan Statistical Areas called Core Based Statistical Areas. These core areas comprise a set of communities, often with a population center and shared economic and social ties. 
 
-The file `products.csv` holds data on every product, and looks something like this:
+Metropolitan and Micropolitan statistical areas can span one or more counties and states. For instance, "New York-Northern New Jersey-Long Island, NY-NJ-PA" is a Metropolitan Statistical Area and Core Based Statistical Area that is centered around New York City, extends east through Long Island and west through northern New Jersey and parts of Pennsylvania.
 
+For this challenge, we want to know for each Core Based Statistical Area, the 
+* total number of census tracts, 
+* total population in 2000, 
+* total population in 2010 and 
+* average population percent change for census tracts in this Core Based Statistical Area
+
+Note that census tracts within a Core Based Statstical Area are not necessarily grouped together in the input file, and that there will be a small minority of census tracts that fall outside of any Core Based Statistical Area.
+
+Finally, the Census provides the data in the form of an [Excel spreadsheet](http://www2.census.gov/programs-surveys/decennial/tables/time-series/tract-change-00-10/censustract-00-10.xlsx) but you can assume the input file we'll be using to test your code will be in the form of a comma-separated-value file (see [here](https://www2.census.gov/programs-surveys/metro-micro/technical-documentation/file-layout/tract-change-00-10/censustract-00-10-layout.doc) for more information on the data dictionary). If you are having difficulty converting the Excel spreadsheet into a CSV file, we've made the converted file available to you [here](https://drive.google.com/file/d/14O7dSplprnptDYkn1Jg4M1ojBIkVAsVP/view?usp=sharing).
+
+
+## Expected output
+
+After reading and processing the input file, your code should create an output file, `report.csv`, with as many lines as unique Core Based Statistical Areas found in the input file. If there are no core areas in the input file, your code should still create the `report.csv` file but it should contain no lines.
+
+For every line that exists in the output file, the following fields should be written in this order:
+* Core Based Statstical Area Code (i.e., CBSA09)
+* Core Based Statistical Area Code Title (i.e., CBSA_T)
+* total number of census tracts
+* total population in the CBSA in 2000
+* total population in the CBSA in 2010
+* average population percent change for census tracts in this CBSA. Round to two decimal places using standard rounding conventions (i.e., Any percentage between 0.005% and 0.010%, inclusive, should round to 0.01% and anything less than 0.005% should round to 0.00%)
+
+The lines in the output file should be sorted by Core Based Statstical Area Code (ascending)
+
+Given the above `censustract-00-10.csv` input file, we'd expect an output file, `report.csv`, in the following format
 ```
-product_id,product_name,aisle_id,department_id
-9327,Garlic Powder,104,13
-17461,Air Chilled Organic Boneless Skinless Chicken Breasts,35,12
-17668,Unsweetened Chocolate Almond Breeze Almond Milk,91,16
-28985,Michigan Organic Kale,83,4
-32665,Organic Ezekiel 49 Bread Cinnamon Raisin,112,3
-33120,Organic Egg Whites,86,16
-45918,Coconut Butter,19,13
-46667,Organic Ginger Root,83,4
-46842,Plain Pre-Sliced Bagels,93,3
+28540,"Ketchikan, AK",4,14074,13477,-4.41
+46900,"Vernon, TX",4,14679,13535,-10.25
 ```
-where
-
-* `product_id`: unique identifier of the product
-* `product_name`: name of the product
-* `aisle_id`: identifier of aisle in which product is located
-* `department_id`: identifier of department
-
-
-## Expected Output
-
-Given the two input files in the input directory, your program should create an output file, `report.csv`, in the output directory that, for each department, surfaces the following statistics:
-
-`number_of_orders`. How many times was a product requested from this department? (If the same product was ordered multiple times, we count it as multiple requests)
-
-`number_of_first_orders`. How many of those requests contain products ordered for the first time?
-
-`percentage`. What is the percentage of requests containing products ordered for the first time compared with the total number of requests for products from that department? (e.g., `number_of_first_orders` divided by `number_of_orders`)
-
-For example, with the input files given above, the correct output file is
-
-```
-department_id,number_of_orders,number_of_first_orders,percentage
-3,2,1,0.50
-4,2,0,0.00
-12,1,0,0.00
-13,2,1,0.50
-16,2,0,0.00
-```
-
-*The output file should adhere to the following rules*
-
-- It is listed in ascending order by `department_id`
-- A `department_id` should be listed only if `number_of_orders` is greater than `0`
-- `percentage` should be rounded to the second decimal
-
-The examples input and out files are provided in the `insight_testsuite/tests/test_1/input` and `insight_testsuite/tests/test_1/output` folders, respectively.
+Notice that Core Based Statistical Area Codes titles include a comma (`,`), so values for that field should be enclosed by double quotation marks (`"`). 
 
 ## Instructions
+We designed this coding challenge to assess your coding skills, your understanding of computer science fundamentals and ability to program in a Linux environment. They are both prerequisites of becoming a data engineer. To solve this challenge you might pick a programing language of your choice (preferably Python, Scala, Java, or C/C++ because they are commonly used and will help us better assess you), but you are only allowed to use the default data structures that come with that programming language (you might use I/O libraries). For example, you can code in Python, but you should not use Pandas or any other external libraries (i.e., don't use Python modules that must be installed using 'pip').
 
-We designed this coding challenge to assess your coding skills and your understanding of computer science fundamentals. They are both prerequisites of becoming a data engineer. To solve this challenge you might pick a programing language of your choice (preferably Python, Scala, Java, or C/C++ because they are commonly used and will help us better assess you), but you are only allowed to use the default data structures that come with that programming language (you might use I/O libraries). For example, you can code in Python, but you should not use Pandas or any other external libraries.
+The objective here is to see if you can implement the solution using basic data structure building blocks and software engineering best practices (by writing clean, modular, and well-tested code).
 
-***The objective here is to see if you can implement the solution using basic data structure building blocks and software engineering best practices (by writing clean, modular, and well-tested code).***
+If you are chosen for an interview, you may be asked to think about ways this exercise could be expanded, such as identifying other, useful datasets that you could be joined with the data here and provide additional value.
 
+## Tips on getting an interview
+As a data engineer, it’s important that you write clean, well-documented code that scales for a large amount of data. For this reason, it’s important to ensure that your solution works well for a large number of records, rather than just for this example.
 
-# Tips on getting an interview
+It's important to use software engineering best practices like unit tests, especially because data is not always clean and predictable.
 
-## Writing clean, scalable and well-tested code
+Before submitting your solution you should summarize your approach and run instructions (if any) in your README.
 
-As a data engineer, it’s important that you write clean, well-documented code that scales for a large amount of data. For this reason, it’s important to ensure that your solution works well for a large number of records, rather than just the above example.
+You may write your solution in any mainstream programming language, such as C, C++, Go, Java, Python, Ruby, or Scala. Once completed, submit a link of your Github or Bitbucket repo with your source code.
 
-[Here](https://www.instacart.com/datasets/grocery-shopping-2017) you can find large datasets to test your code (see [here](https://gist.github.com/jeremystan/c3b39d947d9b88b3ccff3147dbcf6c6b) for its data dictionary).
-You can test your code using the files `order_products_train.csv` and `order_products_prior.csv` together with the file `products.csv`.
-Note, we will use it to test the full functionality of your code, along with other tests.
+In addition to the source code, the top-most directory of your repo must include the input and output directories, and a shell script named run.sh that compiles and runs the program(s) that implement(s) the required features.
 
-It's also important to use software engineering best practices like unit tests, especially since data is not always clean and predictable.
-
-Before submitting your solution you should summarize your approach and run instructions (if any) in your `README`.
-
-You may write your solution in any mainstream programming language, such as C, C++, C#, Go, Java, Python, Ruby, or Scala. Once completed, submit a link of your Github or Bitbucket repo with your source code.
-
-In addition to the source code, the top-most directory of your repo must include the `input` and `output` directories, and a shell script named `run.sh` that compiles and runs the program(s) that implement(s) the required features.
-
-If your solution requires additional libraries, environments, or dependencies, you must specify these in your `README` documentation. See the figure below for the required structure of the top-most directory in your repo, or simply clone this repo.
+See the figure below for the required structure of the top-most directory in your repo, or simply clone this repo.
 
 ## Repo directory structure
-
-The directory structure for your repo should look like this:
+The top-level directory structure for your repo should look like the following: (So that we can grade your submission, replicate this directory structure at the top-most level of your project repository. Do not place the structure in a subdirectory)
 
     ├── README.md
     ├── run.sh
     ├── src
-    │   └── purchase_analytics.py
+    │   └── population.py
     ├── input
-    │   └── products.csv
-    |   └── order_products.csv
+    │   └── censustract-00-10.csv (your code should assume this input file exists but you do not need to check this file into your repository)
     ├── output
-    |   └── report.csv
+    |   └── report.csv (your code should produce this file but you do not need to check this file into your repository)
     ├── insight_testsuite
-        └── run_tests.sh
         └── tests
             └── test_1
             |   ├── input
-            |   │   └── products.csv
-            |   │   └── order_products.csv
+            |   │   └── censustract-00-10.csv
             |   |__ output
             |   │   └── report.csv
             ├── your-own-test_1
                 ├── input
-                │   └── your-own-products.csv
-                |   └── your-own-order_products.csv
+                │   └── censustract-00-10.csv
                 |── output
                     └── report.csv
 
-**Don't fork this repo** and don't use this `README` instead of your own. The content of `src` does not need to be a single file called `purchase_analytics.py`, which is only an example. Instead, you should include your own source files and give them expressive names.
+**Don't fork this repo** and don't use this `README` instead of your own. The content of `src` does not need to be a single file called `population.py`, which is only an example. Instead, you should include your own source files and give them expressive names.
 
-## Testing your directory structure and output format
+## Testing your code
+As an engineer, you'll want to make sure you are thoroughly testing your code. Use the `insight_testsuite` directory to showcase the tests you conducted on your code. Under that directory, create a separate folder for each test. Each test directory should also have a separate `input` subdirectory containing the `censustract-00-10.csv` input file you want to test, and an `output` subdirectory containing the expected `report.csv` output for that test.
 
-To make sure that your code has the correct directory structure and the format of the output files are correct, we have included a test script called `run_tests.sh` in the `insight_testsuite` folder.
+We've included one test (`test_1`), which contains the sample input and output files detailed in this Readme. To test your code, you can manually move each input test file into the top-level input directory, then run your program and compare the output with the expected output. Or you can write a script to do this automatically, but note we are not requiring you to write a test script.
 
-The tests are stored simply as text files under the `insight_testsuite/tests` folder. Each test should have a separate folder with an `input` folder for `products.csv` and `order_products.csv` and an `output` folder for `report.csv`.
+We do ask that you test your code using the <a href="https://insight-cc-submission.com/test-my-repo-link">web page</a> mentioned earlier to ensure your code can run in the Linux environment that we will review your code. The test page will check to see if your code passes `test_1`. If there are errors or if the results don't match what is expected, you should debug your code's behavior by yourself. If you receive system errors that you do not believe are due to your code, you can email cc@insightdataengineering.com for help.
 
-You can run the test with the following command from within the `insight_testsuite` folder:
+If your code must be compiled to run (e.g., javac, make), that compilation (as well as the execution) of your code must be specified in the `run.sh` script of your code repository. 
 
-    insight_testsuite~$ ./run_tests.sh
-
-On a failed test, the output of `run_tests.sh` should look like:
-
-    [FAIL]: test_1
-    [Thu Mar 30 16:28:01 PDT 2017] 0 of 1 tests passed
-
-On success:
-
-    [PASS]: test_1
-    [Thu Mar 30 16:25:57 PDT 2017] 1 of 1 tests passed
-
-
-
-One test has been provided as a way to check your formatting and simulate how we will be running tests when you submit your solution. We urge you to write your own additional tests. `test_1` is only intended to alert you if the directory structure or the output for this test is incorrect.
-
-Your submission must pass at least the provided test in order to pass the coding challenge.
-
-For a limited time we also are making available a website (no longer available) that will allow you to simulate the environment in which we will test your code. It has been primarily tested on Python code but could be used for Java and C++ repos. Keep in mind that if you need to compile your code (e.g., javac, make), that compilation needs to happen in the `run.sh` file of your code repository. For Python programmers, you are able to use Python2 or Python3 but if you use the later, specify `python3` in your `run.sh` script.
+For Python programmers, you can use Python 2 or Python 3. If you use the former, specify `python` in your `run.sh` script, or if you use the later, specify `python3`, which defaults to Python 3.5.2. Other options that could be use are `python3.7` or `python3.8`.
