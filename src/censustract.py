@@ -2,10 +2,15 @@ import csv
 import os
 import re
 
-with open('censustract-00-10.csv', 'r', )as test_csv_file:
+absolute_path = os.path.dirname(os.path.abspath(__file__))
+source_file = absolute_path + '\input\censustract-00-10.csv'
+report_file = absolute_path + '\output\censustract-00-10.csv'
+
+with open(source_file, 'r')as test_csv_file:
     csv_reader = csv.DictReader(test_csv_file)
     # for line in csv_reader:
     # print(line['CBSA09'],line['CBSA_T'],line['POP00'],line['POP10'],line['PPCHG'])
+
 
     with open('trim_columns_data.csv', 'w', newline='') as trim_columns_csv_file:
         fieldnames = ['CBSA09', 'CBSA_T', 'POP00', 'POP10', 'PPCHG']
@@ -98,6 +103,7 @@ with open('clean_trim_columns_data.csv') as open_file:
     for key, value in grouped_area.items():
         value[0], value[1], value[2], value[3], value[4] = value[0], value[4], value[1], value[2], value[3]
 
+
     # print(grouped_area)
 
     # flat data to be ready for write on csv file:
@@ -121,7 +127,7 @@ with open('clean_trim_columns_data.csv') as open_file:
     # print()
 
     # data now is read to save on csv:
-    with open('final.csv', 'w', newline='') as final_file:
+    with open(report_file, 'w', newline='') as final_file:
         fieldnames = ['CBSA09', 'CBSA_T', 'No#', 'POP00', 'POP10', 'PPCHG']
         csv_writer = csv.writer(final_file, delimiter=',')
         csv_writer.writerow(fieldnames)
