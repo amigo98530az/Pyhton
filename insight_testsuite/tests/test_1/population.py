@@ -3,8 +3,8 @@ import os
 import re
 
 absolute_path = os.path.dirname(os.path.abspath(__file__))
-source_file = absolute_path + '\input\censustract-00-10.csv'
-report_file = absolute_path + '\output\\report.csv'
+source_file = absolute_path + '/input/censustract-00-10.csv'
+report_file = absolute_path + '/output/report.csv'
 
 with open(source_file, 'r')as test_csv_file:
     csv_reader = csv.DictReader(test_csv_file)
